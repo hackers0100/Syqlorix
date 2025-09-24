@@ -144,7 +144,7 @@ class NodeWrapper:
         cl = attrs.pop("class_", [])
         cl.extend(attrs.pop("class", []))
         cl.extend(self.__c)
-        attrs["class_" = cl
+        attrs["class_"] = cl
         return self.__n(*children, **attrs)
 
     def __repr__(self) -> str:
