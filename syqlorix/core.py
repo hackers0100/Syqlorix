@@ -148,7 +148,7 @@ class NodeWrapper:
         return self.__n(*children, **attrs)
 
     def __repr__(self) -> str:
-        return f"<{self.__n.__class__.__name__}{'.' if self.__c else ''}{'.'.join(self.__c)} />"
+        return f"<{self.__n.__name__}{'.' if self.__c else ''}{'.'.join(self.__c)} />"
 
 class Component(Node):
     pass
