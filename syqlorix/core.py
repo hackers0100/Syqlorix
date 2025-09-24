@@ -141,8 +141,8 @@ class NodeWrapper:
         return self.__class__(self.__n, attr, *self.__c)
 
     def __call__(self, *children, **attrs) -> Node:
-        cl = attrs.pop("class_", [])
-        cl.extend(attrs.pop("class", []))
+        cl = attrs.pop("class_", "").split(" ")
+        cl.extend(attrs.pop("class", "").split(" "))
         cl.extend(self.__c)
         attrs["class_"] = " ".join(cl)
         return self.__n(*children, **attrs)
