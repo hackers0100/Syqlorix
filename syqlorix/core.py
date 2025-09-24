@@ -132,6 +132,24 @@ class Node:
         html += f"{pad}</{self.tag_name}>{nl}"
         return html
 
+class NodeWrapper:
+    def __init__(self, node: Node, *cl):
+        self.__n = node
+        self.__c = cl or []
+
+    def __getattr__(self, attr: str) -> "NodeWrapper":
+        return self.__class__(self.__n, attr, *self.__c)
+
+    def __call__(self, *children, **attrs) -> Node:
+        cl = attrs.pop("class_", [])
+        cl.extend(attrs.pop("class", []))
+        cl.extend(self.__c)
+        attrs["class_" = cl
+        return self.__n(*children, **attrs)
+
+    def __repr__(self) -> str:
+        return f"<{self.__n}{'.' if self.__c else ''}{'.'.join(self.__c)} />"
+
 class Component(Node):
     pass
 
@@ -179,6 +197,11 @@ class script(Node):
                 print(f"{C.WARNING}Could not minify JS: {e}{C.END}")
             self.children = [content]
         return super().render(indent, pretty)
+
+head = NodeWrapper(head)
+body = NodeWrapper(body)
+style = NodeWrapper(style)
+script = NodeWrapper(script)
 
 class Request:
     def __init__(self, handler: BaseHTTPRequestHandler):
@@ -713,10 +736,10 @@ _TAG_NAMES = [
 
 for tag in _TAG_NAMES:
     if tag not in ['style', 'script', 'head', 'body']:
-        globals()[tag] = type(tag, (Node,), {})
+        globals()[tag] = NodeWrapper(type(tag, (Node,), {}))
 
 input_ = globals()['input']
-
+del globals()['input']
 doc = Syqlorix()
 
 # I only use this when I want to add some customs that are requested      
@@ -728,7 +751,7 @@ __all__ = [
     'a', 'abbr', 'address', 'article', 'aside', 'audio', 'b', 'bdi', 'bdo', 'blockquote', 'button', 'canvas', 
     'caption', 'cite', 'code', 'data', 'datalist', 'dd', 'details', 'dfn', 'dialog', 'div', 'dl', 'dt', 'em', 
     'fieldset', 'figcaption', 'figure', 'footer', 'form', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'i', 
-    'iframe', 'img', 'input', 'ins', 'kbd', 'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'meta', 'meter', 
+    'iframe', 'img', 'ins', 'kbd', 'label', 'legend', 'li', 'link', 'main', 'map', 'mark', 'meta', 'meter', 
     'nav', 'noscript', 'object', 'ol', 'optgroup', 'option', 'output', 'p', 'picture', 'pre', 'progress', 'q', 
     'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'small', 'source', 'span', 'strong', 'summary', 
     'sup', 'table', 'tbody', 'td', 'template', 'textarea', 'tfoot', 'th', 'thead', 'time', 'title', 'tr', 'u', 
