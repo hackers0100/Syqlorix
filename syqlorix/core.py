@@ -739,7 +739,6 @@ for tag in _TAG_NAMES:
         globals()[tag] = NodeWrapper(type(tag, (Node,), {}))
 
 input_ = globals()['input']
-del globals()['input']
 doc = Syqlorix()
 
 # I only use this when I want to add some customs that are requested      
